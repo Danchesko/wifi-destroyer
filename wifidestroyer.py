@@ -30,9 +30,10 @@ def restore(victim_ip, victim_mac, gateway_ip, gateway_mac):
     
     
 def check_permission():
-    if os.geteuid() != 0 and platform.system is not 'Windows':
-        print(constants.PERMISSION_ERROR)
-        exit()
+    if platform.system is not 'Windows':
+        if os.geteuid() != 0:
+            print(constants.PERMISSION_ERROR)
+            exit()
     
         
 def get_ip_range(my_ip):
