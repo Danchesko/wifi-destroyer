@@ -1,5 +1,6 @@
 import os
 import time 
+import platform
 
 from scapy.all import ARP, send, arping, socket, logging
 
@@ -29,7 +30,7 @@ def restore(victim_ip, victim_mac, gateway_ip, gateway_mac):
     
     
 def check_permission():
-    if os.geteuid() != 0:
+    if os.geteuid() != 0 and platform.system is not 'Windows':
         print(constants.PERMISSION_ERROR)
         exit()
     
