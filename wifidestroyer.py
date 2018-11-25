@@ -1,4 +1,5 @@
 import os
+import sys
 import time 
 import platform
 
@@ -30,7 +31,7 @@ def restore(victim_ip, victim_mac, gateway_ip, gateway_mac):
     
     
 def check_permission():
-    if platform.system is not 'Windows':
+    if platform.system() is not 'Windows':
         if os.geteuid() != 0:
             print(constants.PERMISSION_ERROR)
             exit()
@@ -38,6 +39,7 @@ def check_permission():
         
 def get_ip_range(my_ip):
     return ".".join(my_ip.split(".")[:-1]) + ".*"
+
 
 def get_gateway_ip(my_ip):
     return ".".join(my_ip.split(".")[:-1]) + ".1"
@@ -64,8 +66,7 @@ if __name__ == "__main__":
             for victim in devices_identities:
                 destroy(victim[0], victim[1], gateway_ip)
     except KeyboardInterrupt:
-        for victim in devices_identities:
-            restore(victim[0], victim[1], gateway_ip, gateway_mac) 
+        sys.exit(0)
     finally:
         for victim in devices_identities:
             restore(victim[0], victim[1], gateway_ip, gateway_mac) 
