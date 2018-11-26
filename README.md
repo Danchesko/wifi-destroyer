@@ -5,12 +5,13 @@
 ## Requirements
 - Python 3
 - pip
+- scapy
 
 ## How to run
 ```
 git clone git@github.com:s7b5en/wifi-destroyer.git
 cd wifi-destroyer
-pip install scrapy
+pip install scapy
 python wifi-destroyer
 ```
 
