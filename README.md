@@ -9,7 +9,7 @@
 
 ## How to run
 ```
-git clone git@github.com:s7b5en/wifi-destroyer.git
+git clone git@github.com:Danchesko/wifi-destroyer.git
 cd wifi-destroyer
 pip install scapy
 python wifi-destroyer
